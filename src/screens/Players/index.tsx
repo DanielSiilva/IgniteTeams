@@ -6,9 +6,12 @@ import { Filter } from "@components/Filter";
 import { Header } from "@components/Header";
 import { Highlight } from "@components/Highlight";
 import { Input } from "@components/Input";
+import { PlayerCard } from '@components/PlayerCard';
 
 
 import { Container, Form, HeaderList, NumberOfPlayers } from "./styles";
+
+
 
 
 export function Players(){
@@ -56,6 +59,19 @@ export function Players(){
                     {players.length}
                 </NumberOfPlayers>
             </HeaderList>
+
+            <FlatList
+                data={players}
+                keyExtractor={item => item}
+                renderItem={({item}) => (
+                    <PlayerCard 
+                        name={item}
+                        onRemove ={() => {}}
+                    
+                    />
+                )}
+            
+            />
         </Container>
     )
 }
