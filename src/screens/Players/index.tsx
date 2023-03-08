@@ -13,7 +13,7 @@ import { Container, Form, HeaderList, NumberOfPlayers } from "./styles";
 
 export function Players(){
     const [team, setTeam] = useState('Time A')
-    const [players, setPlayers] = useState([])
+    const [players, setPlayers] = useState(['Daniel'])
 
     return(
         <Container>
@@ -46,6 +46,7 @@ export function Players(){
                         <Filter 
                             title={item}
                             isActive={item === team}
+                            onPress={() => setTeam(item)}
                         />
                     )}
                     horizontal
