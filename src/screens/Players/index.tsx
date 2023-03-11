@@ -1,5 +1,5 @@
 import {useState, useEffect, useRef} from 'react'
-import {Alert, FlatList, TextInput, Keyboard} from 'react-native'
+import {Alert, FlatList, TextInput} from 'react-native'
 import { useRoute, useNavigation } from '@react-navigation/native';
 
 import { ButtonIcon } from "@components/ButtonIcon";
@@ -20,6 +20,7 @@ import { PlayerStorageDTO } from '@storage/player/PlayerStorageDTO';
 import { playersGetByGroupAndTeam } from '@storage/player/splayersGetByGroupAndTeam';
 import { playerRemoveByGroup } from '@storage/player/srcplayerRemoveByGroup';
 import { groupRemoveByName } from '@storage/group/srcgroupRemoveByName';
+import { Loading } from '@components/Loading';
 
 
 type RouteParams = {
@@ -29,6 +30,7 @@ type RouteParams = {
 
 
 export function Players(){
+    const [isLoading, setIsLoading] = useState(true);
     const [newPlayerName, setNewPlayerName] = useState('')
     const [team, setTeam] = useState('Time A')
     const [players, setPlayers] = useState<PlayerStorageDTO[]>([])
@@ -69,8 +71,12 @@ export function Players(){
 
     async function fetchPlayerByTeam(){
         try {
+            setIsLoading(true)
+
             const playersByTeam = await playersGetByGroupAndTeam(group, team)
             setPlayers(playersByTeam)
+
+            setIsLoading(false)
             
         } catch (error) {
             console.log(error)
@@ -98,7 +104,7 @@ export function Players(){
             
         } catch (error) {
             console.log(error);
-            Alert.alert('Remover Grupo', 'Não foi posível remover o grupo');
+            Alert.alert('Remover Grupo', 'Não foi possível remover o Turma');
         }
     }
 
@@ -153,18 +159,20 @@ export function Players(){
             </Form>
 
             <HeaderList>
-                <FlatList 
-                    data={['Time A', 'Time B']}
-                    keyExtractor={item => item}
-                    renderItem={({ item }) => (
-                        <Filter 
-                            title={item}
-                            isActive={item === team}
-                            onPress={() => setTeam(item)}
-                        />
-                    )}
-                    horizontal
-                />
+                {isLoading ? <Loading /> : 
+                    <FlatList 
+                        data={['Time A', 'Time B']}
+                        keyExtractor={item => item}
+                        renderItem={({ item }) => (
+                            <Filter 
+                                title={item}
+                                isActive={item === team}
+                                onPress={() => setTeam(item)}
+                            />
+                        )}
+                        horizontal
+                    />
+                 }
 
                 <NumberOfPlayers>
                     {players.length}
